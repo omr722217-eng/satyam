@@ -7,8 +7,9 @@ const { Pool } = require('pg');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database Connection to Supabase PostgreSQL
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:XhBQsukJTXMFX4uT@db.pworthvdkipwqennqfto.supabase.co:5432/postgres';
+// Database Connection to Supabase PostgreSQL (IPv4 Pooler for Render compatibility)
+const defaultDbUrl = 'postgresql://postgres.pworthvdkipwqennqfto:XhBQsukJTXMFX4uT@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres';
+const connectionString = process.env.DATABASE_URL || defaultDbUrl;
 const pool = new Pool({
   connectionString,
   ssl: { rejectUnauthorized: false },

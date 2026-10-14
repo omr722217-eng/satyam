@@ -45,7 +45,7 @@ In the Render Web Service setup, expand the **Environment Variables** section an
 
 | Key Name | Value | Description |
 |---|---|---|
-| `DATABASE_URL` | `postgresql://postgres:XhBQsukJTXMFX4uT@db.pworthvdkipwqennqfto.supabase.co:5432/postgres` | Your live Supabase PostgreSQL connection string |
+| `DATABASE_URL` | `postgresql://postgres.pworthvdkipwqennqfto:XhBQsukJTXMFX4uT@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres` | Your live Supabase PostgreSQL IPv4 connection string (required for Render) |
 | `GEMINI_API_KEY` | *(Paste your Google Gemini API Key here)* | Your Google AI Studio API Key for live AI briefings |
 | `NODE_ENV` | `production` | Production environment flag |
 | `PORT` | `10000` | Render standard port (handled automatically if omitted) |
