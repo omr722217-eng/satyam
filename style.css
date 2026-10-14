@@ -192,3 +192,16 @@ body.dark .slot-btn.selected{background:#2d2952;color:#d7d1ff;border-color:#9282
 .att-btn-p:hover{background:#28a981;color:#fff}
 .att-btn-a{background:#ffebee;color:#d32f2f}
 .att-btn-a:hover{background:#d32f2f;color:#fff}
+
+@keyframes livePulse {
+  0% { box-shadow: 0 0 0 0 rgba(75,206,161,0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(75,206,161,0); }
+  100% { box-shadow: 0 0 0 0 rgba(75,206,161,0); }
+}
+.status i { animation: livePulse 2s infinite !important; }
+
+/* Polished scrollbars & interactive transitions */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d0cdeb; border-radius: 4px; }
+body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
