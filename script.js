@@ -1,14 +1,10 @@
 (()=>{
-  // CampusIQ — Fully Connected Application (Supabase PostgreSQL Backend)
+  // CampusIQ — Fully Connected Application (Supabase PostgreSQL & Render)
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
 
-  // Detect API base URL: defaults to relative /api or http://localhost:3000
-  const API_BASE = (window.location.protocol.startsWith('http') && window.location.port === '3000') 
-    ? '' 
-    : (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'))
-      ? window.location.origin
-      : 'http://localhost:3000';
+  // Relative API_BASE for all HTTP/HTTPS deployments (Render, localhost, etc.)
+  const API_BASE = window.location.protocol.startsWith('http') ? '' : 'https://satyam-i24x.onrender.com';
 
   let currentUser = null;
   let authToken = localStorage.getItem('campusiq_token') || null;
@@ -77,7 +73,57 @@
     }
   });
 
-  // Page Navigation
+  // ===================== VIEW SWITCHER: LANDING PAGE vs WORKSPACE =====================
+  function showLandingView() {
+    const landing = $('#view-landing');
+    const app = $('#view-app');
+    if (landing) landing.style.display = 'block';
+    if (app) app.style.display = 'none';
+    history.replaceState(null, '', '#landing');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function showAppView(page = 'overview') {
+    const landing = $('#view-landing');
+    const app = $('#view-app');
+    if (landing) landing.style.display = 'none';
+    if (app) app.style.display = 'block';
+    go(page);
+  }
+
+  // Bind Landing Page CTAs
+  const landingSignIn = $('#landingSignInBtn');
+  if (landingSignIn) landingSignIn.onclick = () => openAuth('signin');
+
+  const landingPortal = $('#landingPortalBtn');
+  if (landingPortal) landingPortal.onclick = () => {
+    if (currentUser) showAppView('overview');
+    else openAuth('signin');
+  };
+
+  const heroPortal = $('#heroPortalBtn');
+  if (heroPortal) heroPortal.onclick = () => {
+    if (currentUser) showAppView('overview');
+    else openAuth('signin');
+  };
+
+  const heroSignIn = $('#heroSignInBtn');
+  if (heroSignIn) heroSignIn.onclick = () => openAuth('signin');
+
+  const dashPortal = $('#dashPortalBtn');
+  if (dashPortal) dashPortal.onclick = () => {
+    if (currentUser) showAppView('overview');
+    else openAuth('signin');
+  };
+
+  // Bind Workspace Return to Landing buttons
+  const sideToLand = $('#sidebarToLanding');
+  if (sideToLand) sideToLand.onclick = showLandingView;
+
+  const topToLand = $('#topbarToLanding');
+  if (topToLand) topToLand.onclick = showLandingView;
+
+  // ===================== WORKSPACE NAVIGATION =====================
   const pages = ['overview', 'academics', 'attendance', 'events', 'facilities', 'insights'];
   const names = {
     overview: 'Overview',
@@ -90,6 +136,13 @@
 
   function go(page) {
     if (!pages.includes(page)) return;
+    const app = $('#view-app');
+    const landing = $('#view-landing');
+    if (app && app.style.display === 'none') {
+      if (landing) landing.style.display = 'none';
+      app.style.display = 'block';
+    }
+
     $$('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
     $$('.nav').forEach(b => b.classList.toggle('active', b.dataset.page === page));
     $('#crumb').textContent = names[page];
@@ -108,8 +161,8 @@
   document.addEventListener('click', e => {
     const n = e.target.closest('[data-page]');
     const g = e.target.closest('[data-go]');
-    if (n) { e.preventDefault(); go(n.dataset.page); }
-    if (g) { e.preventDefault(); go(g.dataset.go); }
+    if (n) { e.preventDefault(); showAppView(n.dataset.page); }
+    if (g) { e.preventDefault(); showAppView(g.dataset.go); }
   });
 
   // Sidebar toggle on mobile
@@ -180,6 +233,9 @@
 
     const dbStatus = $('#dbStatus');
     if (dbStatus) dbStatus.textContent = signedIn ? 'Supabase Connected' : 'Supabase Live';
+
+    const landSignIn = $('#landingSignInBtn');
+    if (landSignIn) landSignIn.textContent = signedIn ? `Hi, ${currentUser.full_name.split(' ')[0]}` : 'Sign in';
   }
 
   function openAuth(mode = 'signin') {
@@ -189,7 +245,7 @@
       ? 'Register as a verified student or faculty member.' 
       : mode === 'reset' ? 'Enter your registered email to receive recovery instructions.' : 'Sign in to access your synchronized campus data.';
     
-    nameFieldGroup.hidden = mode !== 'signup';
+    if (nameFieldGroup) nameFieldGroup.hidden = mode !== 'signup';
     authPassword.closest('.password-field').hidden = mode === 'reset';
     $('#rememberMe').closest('label').hidden = mode !== 'signin';
     $('#authSubmit').textContent = mode === 'signup' ? 'Create account' : mode === 'reset' ? 'Send reset link' : 'Sign in securely';
@@ -213,7 +269,7 @@
     authBackdrop.classList.remove('open');
     authBackdrop.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('auth-open');
-    nameFieldGroup.hidden = true;
+    if (nameFieldGroup) nameFieldGroup.hidden = true;
     $('#authPassword').closest('.password-field').hidden = false;
     $('#rememberMe').closest('label').hidden = false;
   }
@@ -230,7 +286,6 @@
 
   $('#signInBtn').onclick = async () => {
     if (currentUser) {
-      // Sign out
       try {
         await api('/api/auth/signout', { method: 'POST' });
       } catch (e) {}
@@ -239,7 +294,7 @@
       localStorage.removeItem('campusiq_token');
       updateAuthUI();
       toast('Signed out successfully.');
-      loadOverview();
+      showLandingView();
     } else {
       openAuth('signin');
     }
@@ -299,8 +354,7 @@
       updateAuthUI();
       closeAuth();
       authForm.reset();
-      loadOverview();
-      loadAttendance();
+      showAppView('overview');
     } catch (err) {
       authError(err.message || 'Authentication failed. Please check your credentials.');
     } finally {
@@ -323,8 +377,7 @@
       updateAuthUI();
       closeAuth();
       toast(`Signed in as demo student (${currentUser.full_name})`);
-      loadOverview();
-      loadAttendance();
+      showAppView('overview');
     } catch (err) {
       authError('Demo login error: ' + err.message);
     } finally {
@@ -541,7 +594,7 @@
           try {
             const res = await api(`/api/assignments/${id}/toggle`, { method: 'POST' });
             toast(res.message);
-            openAssignmentsModal(); // refresh
+            openAssignmentsModal();
           } catch (err) {
             toast('Failed: ' + err.message);
             btn.disabled = false;
@@ -645,7 +698,6 @@
       const data = await api('/api/attendance');
       if (!data.breakdown) return;
 
-      // Update ring
       const ringText = $('.att-ring b');
       if (ringText) ringText.innerHTML = `${data.overallRate}<small>%</small>`;
 
@@ -660,7 +712,6 @@
           : `Attention: Your attendance is currently at ${attRate}%. Mark upcoming classes as Present to recover.`;
       }
 
-      // Render table rows
       const tbody = $('#attendanceRows');
       if (tbody) {
         tbody.innerHTML = data.breakdown.map(r => `
@@ -679,7 +730,6 @@
           </tr>
         `).join('');
 
-        // Ensure table has 6 headers
         const thead = $('table thead tr');
         if (thead && thead.children.length === 5) {
           const th = document.createElement('th');
@@ -687,7 +737,6 @@
           thead.appendChild(th);
         }
 
-        // Attach present/absent click listeners
         $$('[data-mark]').forEach(btn => {
           btn.onclick = async () => {
             const course_id = btn.dataset.id;
@@ -732,7 +781,6 @@
       const { events } = await api('/api/events');
       if (!events || events.length === 0) return;
 
-      // Update Featured Event
       const featured = events.find(e => e.is_featured) || events[0];
       const registerHeroBtn = $('#register');
       if (registerHeroBtn && featured) {
@@ -749,7 +797,6 @@
         };
       }
 
-      // Update Grid Cards
       const grid = $('#eventGrid');
       if (grid) {
         const gridEvents = events.filter(e => !e.is_featured);
@@ -808,7 +855,6 @@
       if (!facilities || facilities.length === 0) return;
       facilitiesData = facilities;
 
-      // Update Hero stats
       const totalCap = facilities.reduce((sum, f) => sum + f.total_capacity, 0);
       const occupiedCap = facilities.reduce((sum, f) => sum + f.occupied_capacity, 0);
       const availCap = totalCap - occupiedCap;
@@ -816,7 +862,6 @@
       const heroB = document.querySelector('.facility-hero>div+div>b');
       if (heroB) heroB.innerHTML = `${availCap}<span>/${totalCap}</span>`;
 
-      // Render Facility Cards
       const grid = $('#facilityGrid');
       if (grid) {
         grid.innerHTML = facilities.map(f => {
@@ -989,7 +1034,6 @@
 
   // ===================== APP INITIALIZATION =====================
   async function initApp() {
-    // 1. Verify Authentication from session
     if (authToken) {
       try {
         const res = await api('/api/auth/me');
@@ -1004,16 +1048,22 @@
     }
     updateAuthUI();
 
-    // 2. Load Initial Data
+    // Data Loaders
     loadOverview();
     loadAcademics();
     loadAttendance();
     loadEvents();
     loadFacilities();
 
-    // 3. Handle Hash Routing
+    // Handle initial routing:
     const hash = location.hash.slice(1);
-    if (pages.includes(hash)) go(hash);
+    if (pages.includes(hash)) {
+      showAppView(hash);
+    } else if (authToken) {
+      showAppView('overview');
+    } else {
+      showLandingView();
+    }
   }
 
   initApp();
