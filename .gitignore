@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.local
+*.log
+scratch/
+CampusIQ_Professional_Website_With_Logo.zip
