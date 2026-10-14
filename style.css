@@ -440,6 +440,7 @@ body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
 #view-landing .dash-wrap { gap:30px }
 #view-landing .flow { gap:5px }
 #view-landing .flow article { padding:16px 11px }
+}
 @media(max-width:740px){.landing-header{height:70px;padding:0 5%}
 #view-landing .landing-header nav { display:none;position:absolute;top:70px;left:0;right:0;background:white;border-bottom:1px solid var(--line);padding:18px 6%;flex-direction:column;gap:18px }
 #view-landing .landing-header nav.open { display:flex }
@@ -466,6 +467,7 @@ body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
 #view-landing .flow article { min-height:155px }
 #view-landing .about-card { padding:50px 7% }
 #view-landing .deco { right:2%;opacity:.4 }
+}
 @media(max-width:480px){.landing-brand{font-size:17px}
 #view-landing .landing-hero { padding-top:48px }
 #view-landing .landing-hero h1 { letter-spacing:-2.8px }
@@ -511,21 +513,26 @@ body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
 #view-landing .deco { right:-30px;top:28%;transform:none }
 #view-landing footer { padding:22px 6%;flex-wrap:wrap;gap:10px }
 #view-landing footer p { order:3;width:100%;margin:0 }
-#view-landing /* User-provided CampusIQ logo integration */
-.brand-logo-img { width:36px;height:36px;object-fit:cover;object-position:center;border-radius:10px;display:block;box-shadow:0 5px 15px #061b3b25 }
+}
+
+/* User-provided CampusIQ logo integration */
+.brand-logo-img { width:36px !important;height:36px !important;max-width:36px !important;max-height:36px !important;object-fit:cover;object-position:center;border-radius:10px;display:block;box-shadow:0 5px 15px #061b3b25 }
 #view-landing .brand-name { font:800 19px Manrope,sans-serif;letter-spacing:-.7px;color:var(--ink) }
 #view-landing .brand-name>span { color:var(--blue) }
 #view-landing .mock-logo-img { width:28px;height:28px;object-fit:cover;object-position:center;border-radius:8px;display:block }
 #view-landing .window-logo-img { width:31px;height:31px;object-fit:cover;object-position:center;border-radius:8px;display:block;margin:0 0 17px 3px }
-@media(max-width:480px){.brand-logo-img{width:31px;height:31px}
-#view-landing .brand-name { font-size:17px }
+
+@media(max-width:480px){
+  .brand-logo-img{width:31px !important;height:31px !important;max-width:31px !important;max-height:31px !important}
+  #view-landing .brand-name { font-size:17px }
+}
 
 /* View Switching */
 .landing-view { display: block; width: 100%; min-height: 100vh; background: #fff; color: #1b2040; }
 .app-view { width: 100%; min-height: 100vh; }
 .landing-header-actions { display: flex; gap: 10px; align-items: center; }
 .landing-brand { display: flex; align-items: center; gap: 9px; font: 800 19px Manrope,sans-serif; text-decoration: none; color: inherit; }
-.landing-brand .brand-logo-img { width: 36px; height: 36px; border-radius: 9px; object-fit: contain; }
+.landing-brand .brand-logo-img { width: 36px !important; height: 36px !important; max-width: 36px !important; max-height: 36px !important; border-radius: 9px; object-fit: contain; }
 .landing-brand .brand-name { font: 800 20px Manrope; letter-spacing: -0.7px; }
 .landing-brand .brand-name span { color: #5267ff; }
 
@@ -534,3 +541,4 @@ body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
 @media (max-width: 850px) {
   #view-app main { margin-left: 0; }
 }
+
