@@ -542,3 +542,229 @@ body.dark ::-webkit-scrollbar-thumb { background: #3b3c5a; }
   #view-app main { margin-left: 0; }
 }
 
+/* ==========================================================================
+   CampusIQ Human-Craft Design System & Typography Elevation
+   Standard: Anti-AI look, generous whitespace, crisp Plus Jakarta Sans / DM Sans,
+   refined slate neutrals, Apple-inspired micro-interactions, full accessibility.
+   ========================================================================== */
+
+:root {
+  --font-heading: 'Plus Jakarta Sans', 'Manrope', -apple-system, sans-serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-600: #475569;
+  --color-slate-900: #0f172a;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .brand b, .nav-label, .crumb b {
+  font-family: var(--font-heading);
+}
+
+/* Subtle micro-interactions on interactive elements */
+button, .btn, .btn-action-sm, .nav, .primary, .signin-btn, .shortcuts button, .stat, .subject, .event-card, .facility-card, .insight-card {
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.18s var(--ease-spring), background-color 0.18s ease, border-color 0.18s ease;
+}
+
+button:active, .btn:active, .primary:active, .signin-btn:active, .shortcuts button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Polished Topbar */
+.topbar {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+body.dark .topbar {
+  background: rgba(15, 23, 42, 0.88);
+  border-bottom-color: rgba(51, 65, 85, 0.8);
+}
+
+/* Clean legibility fixes across Workspace cards & typography */
+.stat-top label, .pill, .live-label, .good-pill, .warn-pill, .info-pill, .badge-tag {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.2px !important;
+  padding: 4px 9px !important;
+  border-radius: 6px !important;
+}
+
+.class label, .subject>label, .event-card-body>label, .facility-art label, .insight-card>label {
+  font-size: 10.5px !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 700 !important;
+}
+
+.class h4, .subject h3, .event-card h3, .facility-body h3, .insight-card h3 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+}
+
+.class p, .subject p, .event-card p, .facility-body p, .insight-card p {
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+.schedule-row time {
+  font-size: 11px !important;
+}
+.schedule-row time small {
+  font-size: 9px !important;
+}
+
+.stat>p {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+.stat>small {
+  font-size: 11px !important;
+}
+
+.stat>strong {
+  font-size: 32px !important;
+  letter-spacing: -0.8px !important;
+}
+
+.meta {
+  font-size: 11px !important;
+}
+
+.subject>small {
+  font-size: 11.5px !important;
+}
+
+/* Learning Shortcuts Grid */
+.shortcuts button {
+  padding: 18px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+}
+.shortcuts button:hover {
+  transform: translateY(-2px) !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.12) !important;
+}
+.shortcuts button b {
+  font-size: 13.5px !important;
+}
+.shortcuts button small {
+  font-size: 11px !important;
+}
+
+/* Table Readability */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+th {
+  font-size: 11px !important;
+  letter-spacing: 0.6px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  background: #f8fafc !important;
+  padding: 14px 18px !important;
+}
+td {
+  font-size: 12.5px !important;
+  padding: 15px 18px !important;
+}
+td>b {
+  font-size: 13px !important;
+}
+.table-foot {
+  font-size: 11.5px !important;
+  padding: 14px 18px !important;
+}
+
+/* Attendance Ring & Copy */
+.att-content h2 {
+  font-size: 20px !important;
+}
+.att-content p {
+  font-size: 13px !important;
+  line-height: 1.65 !important;
+}
+.att-content small {
+  font-size: 11.5px !important;
+}
+
+/* Modals & Backdrops: Apple-inspired crispness */
+.feature-modal, .auth-card, .modal {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.05) !important;
+  animation: modalPop 0.22s var(--ease-spring) !important;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.97) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.feature-card {
+  border-radius: 12px !important;
+  padding: 16px !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  background: #f8fafc !important;
+}
+body.dark .feature-card {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.btn-action-sm {
+  padding: 8px 14px !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+}
+
+/* Mobile Ergonomics & Nav Hamburger */
+@media (max-width: 850px) {
+  .landing-header nav {
+    display: none;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 20px;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+  }
+  .landing-header nav.open {
+    display: flex !important;
+  }
+  #view-landing #menu {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}
+
+

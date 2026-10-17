@@ -91,7 +91,7 @@
     go(page);
   }
 
-  // Bind Landing Page CTAs
+  // Bind Landing Page CTAs (Direct & Delegated)
   const landingSignIn = $('#landingSignInBtn');
   if (landingSignIn) landingSignIn.onclick = () => openAuth('signin');
 
@@ -116,12 +116,31 @@
     else openAuth('signin');
   };
 
+  document.addEventListener('click', e => {
+    if (e.target.closest('#landingSignInBtn') || e.target.closest('#heroSignInBtn')) {
+      openAuth('signin');
+    }
+    if (e.target.closest('#landingPortalBtn') || e.target.closest('#heroPortalBtn') || e.target.closest('#dashPortalBtn')) {
+      if (currentUser) showAppView('overview');
+      else openAuth('signin');
+    }
+  });
+
   // Bind Workspace Return to Landing buttons
   const sideToLand = $('#sidebarToLanding');
   if (sideToLand) sideToLand.onclick = showLandingView;
 
   const topToLand = $('#topbarToLanding');
   if (topToLand) topToLand.onclick = showLandingView;
+
+  // Bind Landing Mobile Menu
+  const landingMenu = $('#menu');
+  if (landingMenu) {
+    landingMenu.onclick = () => {
+      const nav = $('#nav');
+      if (nav) nav.classList.toggle('open');
+    };
+  }
 
   // ===================== WORKSPACE NAVIGATION =====================
   const pages = ['overview', 'academics', 'attendance', 'events', 'facilities', 'insights'];
@@ -684,6 +703,13 @@
   }
 
   // Bind Shortcuts
+  const assignBtn = $('#shortcutAssignments');
+  if (assignBtn) assignBtn.onclick = openAssignmentsModal;
+  const plannerBtn = $('#shortcutPlanner');
+  if (plannerBtn) plannerBtn.onclick = openStudyPlannerModal;
+  const resourcesBtn = $('#shortcutResources');
+  if (resourcesBtn) resourcesBtn.onclick = openResourcesModal;
+
   $$('.shortcuts button').forEach((b, idx) => {
     b.onclick = () => {
       if (idx === 0) openAssignmentsModal();
@@ -1029,8 +1055,36 @@
     }
   };
 
-  // Toast data attribute binding
-  $$('[data-toast]').forEach(b => b.onclick = () => toast(b.dataset.toast));
+  // Toast data attribute binding (exclude dedicated modal shortcuts)
+  $$('[data-toast]:not(#shortcutAssignments):not(#shortcutPlanner):not(#shortcutResources)').forEach(b => {
+    b.onclick = () => toast(b.dataset.toast);
+  });
+
+  // Event Delegation for static/dynamic Space Bookings & Event Interests
+  document.addEventListener('click', e => {
+    const spaceBtn = e.target.closest('[data-space]');
+    if (spaceBtn) {
+      const spaceName = spaceBtn.dataset.space;
+      const fac = (facilitiesData || []).find(f => f.name.toLowerCase().includes(spaceName.toLowerCase())) || {
+        id: '1',
+        name: spaceName,
+        location: 'Main Academic Quad',
+        hours: '8 AM – 8 PM',
+        total_capacity: 20,
+        occupied_capacity: 6
+      };
+      openBookingModal(fac);
+    }
+
+    const interestBtn = e.target.closest('[data-interest]');
+    if (interestBtn) {
+      const title = interestBtn.dataset.interest;
+      toast(`Registered interest for "${title}"!`);
+      interestBtn.textContent = 'Registered ✓';
+      interestBtn.style.color = '#28a981';
+      interestBtn.style.fontWeight = '800';
+    }
+  });
 
   // ===================== APP INITIALIZATION =====================
   async function initApp() {
